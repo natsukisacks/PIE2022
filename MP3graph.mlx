@@ -1,0 +1,48 @@
+% Rows: time, left sensor, right sensor, left motor, right motor
+full_data = zeros(249, 5);
+
+% Backwards speed = 25
+for i = 1:249
+    % If the left IR sensor 
+    if MP3motordata(i, 2) >= 500
+        full_data(i, 1) = MP3motordata(i, 1);
+        full_data(i, 2) = MP3motordata(i, 2);
+        full_data(i, 3) = MP3motordata(i, 3);
+        full_data(i, 4) = -25;
+        full_data(i, 5) = 25;
+        % left motor --> forwards (-25)
+        % right motor --> backwards (25)
+    % Right IR sensor
+    elseif MP3motordata(i, 3) >= 750
+        full_data(i, 1) = MP3motordata(i, 1);
+        full_data(i, 2) = MP3motordata(i, 2);
+        full_data(i, 3) = MP3motordata(i, 3);
+        full_data(i, 4) = 25;
+        full_data(i, 5) = -25;
+        % left motor --> backwards (25)
+        % right motor --> forwards (-25)
+    else
+        full_data(i, 1) = MP3motordata(i, 1);
+        full_data(i, 2) = MP3motordata(i, 2);
+        full_data(i, 3) = MP3motordata(i, 3);
+        full_data(i, 4) = 25;
+        full_data(i, 5) = 25;
+    end
+
+    % need to add all other conditions into matrix
+end
+
+% Plot speed vs. sensor
+clf; cla;
+hold on;
+plot(full_data(:, 1), full_data(:, 2)); label1 = "Left Sensor";
+plot(full_data(:, 1), full_data(:, 3)); label2 = "Right Sensor";
+plot(full_data(:, 1), full_data(:, 4)); label3 = "Right Motor";
+plot(full_data(:, 1), full_data(:, 5)); label4 = "Left Motor";
+
+title("IR Sensor Readings and Motor Commands");
+ylim([-40 950]);
+xlabel("Time (seconds)");
+ylabel("Infrared Sensor Reading");
+legend(label1, label2, label3, label4, "Location", "Best");
+hold off;
