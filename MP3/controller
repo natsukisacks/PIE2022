@@ -1,0 +1,65 @@
+#include <Adafruit_MotorShield.h>
+Adafruit_MotorShield AFMS  = Adafruit_MotorShield(); 
+
+constexpr uint8_t ir_port = A1;
+constexpr uint8_t ir_stbd = A0;
+Adafruit_DCMotor *motor_port = AFMS.getMotor(2);
+Adafruit_DCMotor *motor_stbd = AFMS.getMotor(1);
+
+constexpr uint8_t SPEED_STRAIGHT = 25;
+constexpr uint8_t SPEED_TURNING  = 25;//100;
+constexpr uint8_t SEEING_LINE = 850;
+int input = 0;
+
+void setup() {
+  Serial.begin(9600);
+
+  // Set serial timeout to 0 to prevent the 
+  // Serial.setTimeout();
+  // Sensor range: 0 to 1024
+  pinMode(ir_port, INPUT_PULLUP); // left IR sensor
+  pinMode(ir_stbd, INPUT_PULLUP); // right IR sensor
+
+
+  if(!AFMS.begin()) {
+    Serial.println("Motor shield not connected.");
+    exit(1);
+  }
+
+  // Set motor speed to 25 (analog 0 to 255)
+  motor_port->setSpeed(25);
+  motor_stbd->setSpeed(25);
+}
+
+void loop() {
+  if (Serial.available() > 0) {
+    input = Serial.parseInt();
+    Serial.println(input);
+      if (input == 1) { // Go
+        // If left sensor over line, turn left
+        if(analogRead(ir_port) >= 500) {
+          motor_port->run(FORWARD);
+          motor_stbd->run(BACKWARD);
+          delay(100);
+        }
+
+        // If right sensor over line, turn right
+        else if(analogRead(ir_stbd) >= 750) {
+          motor_port->run(BACKWARD);
+          motor_stbd->run(FORWARD);
+          delay(100);
+        }
+
+        // If line is in between, keep going
+        else {
+          motor_port->run(BACKWARD); // our backward is actually forward
+          motor_stbd->run(BACKWARD);
+          delay(100);
+        }
+      }
+      if (input == 2) { // Stop
+              motor_port->setSpeed(0);
+        motor_stbd->setSpeed(0);
+      }
+    }
+  }
