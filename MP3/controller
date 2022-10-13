@@ -37,6 +37,7 @@ void loop() {
     Serial.println(input);
       if (input == 1) { // Go
         // If left sensor over line, turn left
+        Serial.println("Go");
         if(analogRead(ir_port) >= 500) {
           motor_port->run(FORWARD);
           motor_stbd->run(BACKWARD);
@@ -58,7 +59,8 @@ void loop() {
         }
       }
       if (input == 2) { // Stop
-              motor_port->setSpeed(0);
+        Serial.println("Stop");
+        motor_port->setSpeed(0);
         motor_stbd->setSpeed(0);
       }
     }
