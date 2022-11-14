@@ -1,0 +1,62 @@
+#include <elapsedMillis.h>
+elapsedMillis timeElapsed;
+String info[ 2 ]; // instantiate string of len 2
+int flow_rate = 100; // put in the proper flow rate
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(3, OUTPUT); // connect valve 1
+  pinMode(5, OUTPUT); // connect valve 2
+}
+
+/* NEXT STEPS:
+  figure out how to store types of drinks in a dictionary?
+  figure out how to know when the cup is under the bottle
+  read in as a string and split by commas? so have the amount to dispense and drink type
+*/
+
+void loop() {
+  int valve = 0;
+
+  // Make sure valves are closed; for these relays, HIGH = off
+  digitalWrite(3, HIGH); 
+  digitalWrite(5, HIGH);
+
+  if (Serial.available() > 0) { // must keep serial avail at this conditional
+    String valve = Serial.readString(); // get the integer value from the serial
+    valve.trim(); // trim any whitespace
+
+    // Split the string into amount and drink type
+    int index = valve.indexOf(',');
+    info[ 0 ] = valve.substring(0, index); // Store the amount to pour
+    int amt = info[ 0 ].toInt(); // Turn this string into an int
+    info[ 1 ] = valve.substring(index+1, valve.length()); // Store the valve number
+    Serial.println(amt); 
+    Serial.println(info[ 1 ]);
+
+    // Calibration equation
+    int dispense = amt * flow_rate;
+
+    if (info[ 1 ] == "1") {
+      valveOn(3, dispense);
+      Serial.println("open valve 1");
+    } else if (info[ 1 ] == "2") {
+      valveOn(5, dispense);
+      Serial.println("open value 2");
+    } else if (info[ 1 ] == "3") {
+      valveOn(5, dispense);
+      Serial.println("open value 3");
+    }
+  }
+}
+
+void valveOn(int pin, unsigned int timeOpen) {
+  /* This function gives power to the proper relay.
+     int pin: the pin on the Arduino to send power to
+     int timeOpen: the length of time to keep the relay open */
+  timeElapsed = 0; // reset the millis counter
+  while (timeElapsed < timeOpen) {
+    digitalWrite(pin, LOW);
+  }
+  digitalWrite(pin, HIGH);
+}
