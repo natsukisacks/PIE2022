@@ -2,6 +2,10 @@ from Tkinter import *
 import tkFont
 import RPi.GPIO as GPIO
 
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(40, GPIO.OUT)
+GPIO.output(40, GPIO.LOW)
+
 win = Tk()
 
 myFont = tkFont.Font(family = 'Helvetica', size = 36, weight = 'bold')
@@ -18,8 +22,9 @@ def ledON():
 def exitProgram():
 	print("Exit Button pressed")
         GPIO.cleanup()
-	win.quit()
-  
+	win.quit()	
+
+
 win.title("First GUI")
 win.geometry('800x480')
 
