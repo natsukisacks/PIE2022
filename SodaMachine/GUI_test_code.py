@@ -14,10 +14,10 @@ def ledON():
 	print("LED button pressed")
 	if GPIO.input(40) :
  		GPIO.output(40,GPIO.LOW)
-		ledButton["text"] = "LED ON"
+			ledButton["text"] = "LED ON"
 	else:
 		GPIO.output(40,GPIO.HIGH)
-                ledButton["text"] = "LED OFF"
+                	ledButton["text"] = "LED OFF"
 
 def exitProgram():
 	print("Exit Button pressed")
