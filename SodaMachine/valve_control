@@ -1,7 +1,7 @@
 #include <elapsedMillis.h>
 elapsedMillis timeElapsed;
 String info[ 2 ]; // instantiate string of len 2
-int flow_rate = 100; // put in the proper flow rate
+float flow_rate = 0.005; // in mL/ms
 
 void setup() {
   Serial.begin(9600);
@@ -11,10 +11,10 @@ void setup() {
 
 /* NEXT STEPS:
   figure out how to store types of drinks in a dictionary?
-  figure out how to know when the cup is under the bottle
-  read in as a string and split by commas? so have the amount to dispense and drink type
+  figure out how to know when the cup is under the bottle -- apparently can just count the stepper motor steps
 */
 
+// Can loop through the length of string. Once ; reached, counter++, put start:end into arr[i]
 void loop() {
   int valve = 0;
 
@@ -26,37 +26,41 @@ void loop() {
     String valve = Serial.readString(); // get the integer value from the serial
     valve.trim(); // trim any whitespace
 
+    // Need a for loop for this
     // Split the string into amount and drink type
     int index = valve.indexOf(',');
     info[ 0 ] = valve.substring(0, index); // Store the amount to pour
     int amt = info[ 0 ].toInt(); // Turn this string into an int
     info[ 1 ] = valve.substring(index+1, valve.length()); // Store the valve number
-    Serial.println(amt); 
-    Serial.println(info[ 1 ]);
 
-    // Calibration equation
-    int dispense = amt * flow_rate;
+    // Calibration equation for amount to open valve for
+    float dispense = amt / flow_rate;
+    Serial.println(dispense);
 
-    if (info[ 1 ] == "1") {
-      valveOn(3, dispense);
-      Serial.println("open valve 1");
-    } else if (info[ 1 ] == "2") {
-      valveOn(5, dispense);
-      Serial.println("open value 2");
-    } else if (info[ 1 ] == "3") {
-      valveOn(5, dispense);
-      Serial.println("open value 3");
+    int counter = length(info) - 1;
+    for i <= counter
+      if (info[ 1 ] == "1") { // Coke
+        valveOn(LED_BUILTIN, dispense);
+        Serial.println("open valve 1");
+      } else if (info[ 1 ] == "2") { // Lime juice
+        valveOn(5, dispense);
+        Serial.println("open value 2");
+      } else if (info[ 1 ] == "3") { // Sprite
+        valveOn(5, dispense);
+        Serial.println("open value 3");
+      } // fourth drink?
     }
-  }
 }
 
 void valveOn(int pin, unsigned int timeOpen) {
+  // Possible that it isn't waiting to read from the Serial port...
+  Serial.println("reading");
   /* This function gives power to the proper relay.
      int pin: the pin on the Arduino to send power to
      int timeOpen: the length of time to keep the relay open */
   timeElapsed = 0; // reset the millis counter
   while (timeElapsed < timeOpen) {
-    digitalWrite(pin, LOW);
+    digitalWrite(pin, HIGH); // switched the power for built in LED, but switch back for valves
   }
-  digitalWrite(pin, HIGH);
+  digitalWrite(pin, LOW);
 }
