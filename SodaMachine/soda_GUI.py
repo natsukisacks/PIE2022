@@ -5,7 +5,7 @@ import time
 
 # Open serial if not open
 # NOTE: Arduino must be plugged in but needs to have the Serial Monitor closed
-ser = serial.Serial(port='COM7', baudrate=9600, timeout=0)
+ser = serial.Serial(port='COM11', baudrate=9600, timeout=0)
 if not ser.isOpen():
     ser.open()
 print('COM7 is open: ', ser.isOpen())
@@ -42,6 +42,7 @@ def sendSerial(valve, amounts):
 
 # Labels
 generalFont = font.Font(family='Courier New', size=16)
+buttonFont = font.Font(family='Courier New', size=12)
 smallFont = font.Font(family='Courier New', size=8)
 greeting = Label(win, text="What would you like to drink?", fg='#00008b', font=generalFont)
 prompt = Label(win, text="Choose your drinks and amounts (mL):", fg='#00008b', font=generalFont)
@@ -73,10 +74,10 @@ cLemonade = Checkbutton(win, text='Done?', variable=filler, onvalue=1, offvalue=
 
 # Create drink buttons
 selectionUpdate = Text(win, height=12, width=40)
-coke = Button(win, text = 'COKE', font = generalFont, bd = '5', bg = '#d2b48c', command=lambda: btnCallback("coke", selectionUpdate))
-sprite = Button(win, text = 'SPRITE', font = generalFont, bd = '5', bg = '#d2b48c', command=lambda: btnCallback("sprite", selectionUpdate))
-icedTea = Button(win, text = 'ICED TEA', font = generalFont, bd = '5', bg = '#d2b48c', command=lambda: btnCallback("iced tea", selectionUpdate))
-lemonade = Button(win, text = 'LEMONADE', font = generalFont, bd = '5', bg = '#d2b48c', command=lambda: btnCallback("lemonade", selectionUpdate))
+coke = Button(win, text = 'MOUNTAIN DEW', font = buttonFont, bd = '5', bg = '#d2b48c', command=lambda: btnCallback("mountain dew", selectionUpdate))
+sprite = Button(win, text = 'BAJA BLAST', font = buttonFont, bd = '5', bg = '#d2b48c', command=lambda: btnCallback("baja blast", selectionUpdate))
+icedTea = Button(win, text = 'GRAPE GATORADE', font = buttonFont, bd = '5', bg = '#d2b48c', command=lambda: btnCallback("grape gatorade", selectionUpdate))
+lemonade = Button(win, text = 'PINK LEMONADE', font = buttonFont, bd = '5', bg = '#d2b48c', command=lambda: btnCallback("pink lemonade", selectionUpdate))
 serialButton = Button(win, text = 'MAKE MY DRINK!', font = generalFont, bd = '2', bg = '#8ABD91', command=lambda: sendSerial(valves, amountList)) # calls lambda which calls other function
 kill = Button(win, text = 'RESTART', font = generalFont, bd = '2', bg = '#FF7276', command=lambda: win.quit())
 
@@ -90,21 +91,21 @@ clearInfo.place(x=635, y=520)
 # Place buttons
 kill.place(x=680, y=550) # bottom right
 serialButton.place(x=325, y=550) # bottom middle
-coke.place(x=180, y=330)
-sprite.place(x=270, y=330)
-icedTea.place(x=390, y=330)
-lemonade.place(x=530, y=330)
+coke.place(x=100, y=330)
+sprite.place(x=250, y=330)
+icedTea.place(x=380, y=330)
+lemonade.place(x=550, y=330)
 
 # Place dropdown menus
-amtMenuCoke.place(x=190, y=390)
-amtMenuSprite.place(x=300, y=390)
+amtMenuCoke.place(x=150, y=390)
+amtMenuSprite.place(x=290, y=390)
 amtMenuIcedTea.place(x=430, y=390)
-amtMenuLemonade.place(x=570, y=390)
+amtMenuLemonade.place(x=590, y=390)
 
 # Place final checkboxes
-cSprite.place(x=185, y=440)
-cCoke.place(x=295, y=440)
+cSprite.place(x=145, y=440)
+cCoke.place(x=285, y=440)
 cIcedTea.place(x=425, y=440)
-cLemonade.place(x=565, y=440)
+cLemonade.place(x=585, y=440)
 
 win.mainloop()
