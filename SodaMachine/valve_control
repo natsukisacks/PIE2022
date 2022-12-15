@@ -76,10 +76,10 @@ void findValve(int index, float dispenseTime) {
     valveOn(6, dispenseTime);
     Serial.println("open valve 2");
   } else if (info[index] == "3") {
-    valveOn(6, dispenseTime);
+    valveOn(9, dispenseTime);
     Serial.println("open valve 3");
   } else if (info[index] == "4") {
-    valveOn(6, dispenseTime);
+    valveOn(10, dispenseTime);
     Serial.println("open valve 4");
   }
 }
